@@ -1,0 +1,23 @@
+{
+  "name": "services-node.js",
+  "version": "1.0.0",
+  "description": "Servicios NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "author": "Ariel Fernandez",
+  "license": "ISC",
+  "dependencies": {
+    "@google/maps": "^0.4.3",
+    "body-parser": "^1.18.0",
+    "cors": "^2.8.4",
+    "express": "^4.15.4",
+    "mongodb": "^2.2.31",
+    "mysql": "^2.14.1",
+    "opn": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.0"
+  }
+}
