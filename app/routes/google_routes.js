@@ -190,7 +190,8 @@ module.exports = function(app, mysqlConn) {
 					placeDetailsResponse = response.json.result;
 					placesDetails = [[
 							placeDetailsResponse.formatted_address, placeDetailsResponse.geometry.location.lat, placeDetailsResponse.geometry.location.lng,
-							placeDetailsResponse.name, placeDetailsResponse.website, placeDetailsResponse.rating,
+							placeDetailsResponse.name, placeDetailsResponse.rating,
+							placeDetailsResponse.website != undefined ? placeDetailsResponse.website : 'Información no disponible',
 							placeDetailsResponse.formatted_phone_number != undefined ? placeDetailsResponse.formatted_phone_number : 'Información no disponible',
 							placeDetailsResponse.opening_hours != undefined ? placeDetailsResponse.opening_hours.weekday_text[0] : 'Información no disponible', 
 							placeDetailsResponse.opening_hours != undefined ? placeDetailsResponse.opening_hours.weekday_text[1] : 'Información no disponible',
@@ -200,7 +201,7 @@ module.exports = function(app, mysqlConn) {
 							placeDetailsResponse.opening_hours != undefined ? placeDetailsResponse.opening_hours.weekday_text[5] : 'Información no disponible',
 							placeDetailsResponse.opening_hours != undefined ? placeDetailsResponse.opening_hours.weekday_text[6] : 'Información no disponible'
 						]];
-					mysqlConn.query('INSERT INTO places (ADDRESS, LAT, LNG, NAME, WEBSITE, RATING, PHONE_NUMBER, OPEN_HS_LU, OPEN_HS_MA, OPEN_HS_MI, \
+					mysqlConn.query('INSERT INTO places (ADDRESS, LAT, LNG, NAME, RATING, WEBSITE, PHONE_NUMBER, OPEN_HS_LU, OPEN_HS_MA, OPEN_HS_MI, \
 						OPEN_HS_JU, OPEN_HS_VI, OPEN_HS_SA, OPEN_HS_DO) VALUES ?', [placesDetails], function (err, result) {
 					    	if (err) throw err;
 					    	console.log(result.affectedRows.toString() + " registro(s) insertado(s) por servicio placesAutocomplete");
