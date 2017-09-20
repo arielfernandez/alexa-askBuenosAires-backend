@@ -33,7 +33,8 @@ module.exports = function(app, mysqlConn) {
 			    if (err) throw err;
 			    console.log("1 registro insertado por servicio myLocation");
 			});
-		    res.send('Mi direccion actual es: ' + direction);
+		    //res.send('Mi direccion actual es: ' + direction);
+		    res.send("mee dee-rehk-seeon ahk-too-ahl ehs- ah-beh-nee-dah cah-seh-ros trehs-meel-kee-nee-ehntos-seh-sentah-e-trehs, Boo-ehmohs-ah-ee-rehs, Ahr-hehn-teen-ah");
 		  }
 		});
 	});
