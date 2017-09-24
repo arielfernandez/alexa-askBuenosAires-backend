@@ -32,7 +32,7 @@ module.exports = function(app, mysqlConn) {
 		    //opn(url + urlParam, {app: 'chrome'});
 		    mysqlConn.query('DELETE FROM google_api_info'); //delete row
 			mysqlConn.query('INSERT INTO google_api_info (MODE, NAME_START, ADDRESS_START, START_LAT, START_LNG) \
-				VALUES (\'myLocation\','+ alexaLocation.name +','+ direction +','+ lat +','+ lng +')', function (err, result) {
+				VALUES (\'myLocation\',\''+ alexaLocation.name +'\','+ direction +','+ lat +','+ lng +')', function (err, result) {
 			    if (err) throw err;
 			    console.log("1 registro insertado por servicio myLocation");
 			});
