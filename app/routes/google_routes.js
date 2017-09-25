@@ -31,12 +31,12 @@ module.exports = function(app, mysqlConn) {
 		    //var urlParam = '?mode=myLocation&lat=' + lat + '&lng=' + lng;
 		    //opn(url + urlParam, {app: 'chrome'});
 		    mysqlConn.query('DELETE FROM google_api_info'); //delete row
-			mysqlConn.query('INSERT INTO google_api_info (MODE, NAME_START, ADDRESS_START, START_LAT, START_LNG) \
-				VALUES (\'myLocation\',\''+ alexaLocation.name +'\','+ direction +','+ lat +','+ lng +')', function (err, result) {
+			mysqlConn.query('INSERT INTO google_api_info (MODE, DESCRIPCION, NAME_START, ADDRESS_START, START_LAT, START_LNG) \
+				VALUES (\'myLocation\', \'Mi direccion actual es: '+ direction +'\',\''+ alexaLocation.name +'\','+ direction +','+ lat +','+ lng +')', function (err, result) {
 			    if (err) throw err;
 			    console.log("1 registro insertado por servicio myLocation");
 			});
-		    res.send('Mi direccion actual es: ' + direction);
+		    res.send('Mi dirección actual es: ' + direction);
 		    //res.send("mee dee-rehk-seeon ahk-too-ahl ehs- ah-beh-nee-dah cah-seh-ros trehs-meel-kee-nee-ehntos-seh-sentah-e-trehs, Boo-ehmohs-ah-ee-rehs, Ahr-hehn-teen-ah");
 		  }
 		});
@@ -59,7 +59,8 @@ module.exports = function(app, mysqlConn) {
 		    //var urlParam = '?mode=myLocation&lat=' + lat + '&lng=' + lng;
 		    //opn(url + urlParam, {app: 'chrome'});
 		    mysqlConn.query('DELETE FROM google_api_info'); //delete row
-			mysqlConn.query('INSERT INTO google_api_info (MODE, START_LAT, START_LNG) VALUES (\'geocode\','+ lat +','+ lng +')', function (err, result) {
+			mysqlConn.query('INSERT INTO google_api_info (MODE, DESCRIPCION, START_LAT, START_LNG) \
+				VALUES (\'geocode\', \'La dirección ' + direction + ' se encuentra indicada en el mapa\','+ lat +','+ lng +')', function (err, result) {
 			    if (err) throw err;
 			    console.log("1 registro insertado por servicio geocode");
 			});
@@ -105,7 +106,8 @@ module.exports = function(app, mysqlConn) {
 		//get places details
     	mysqlConn.query('DELETE FROM google_api_info'); //delete row
     	mysqlConn.query('DELETE FROM places'); //delete row
-    	mysqlConn.query('INSERT INTO google_api_info (MODE) \ VALUES (\'placesAutocomplete\')', function (err, result) {
+    	mysqlConn.query('INSERT INTO google_api_info (MODE, DESCRIPCION) \ VALUES (\'placesAutocomplete\', \'Los lugares mas cercanos de acuerdo a la busqueda se encuentran ubicados en el mapa\')', 
+    		function (err, result) {
     		if (err) throw err;
 		    console.log("1 registro insertado por servicio placesAutocomplete");
 		});
@@ -121,11 +123,13 @@ module.exports = function(app, mysqlConn) {
 				language: 'es'
 			})
 			.asPromise()
-			.then(function(response){
+			.then(function(response){	
 				placeDetailsResponse = response.json.result;
+
 				placesDetails = [[
 						placeDetailsResponse.formatted_address, placeDetailsResponse.geometry.location.lat, placeDetailsResponse.geometry.location.lng,
-						placeDetailsResponse.name, placeDetailsResponse.rating,
+						placeDetailsResponse.name, 
+						placeDetailsResponse.rating != undefined ? placeDetailsResponse.rating : 'Información no disponible',
 						placeDetailsResponse.website != undefined ? placeDetailsResponse.website : 'Información no disponible',
 						placeDetailsResponse.formatted_phone_number != undefined ? placeDetailsResponse.formatted_phone_number : 'Información no disponible',
 						placeDetailsResponse.opening_hours != undefined ? placeDetailsResponse.opening_hours.weekday_text[0] : 'Información no disponible', 
@@ -143,7 +147,7 @@ module.exports = function(app, mysqlConn) {
 				});
 			});
 		}
-		res.send('Los lugares mas cercanos de acuerdo a la busqueda se encuentran ubicados en el mapa');
+		res.send('Los lugares mas cercanos de acuerdo a la búsqueda se encuentran ubicados en el mapa');
 	}
 
 	function onePlace(place, res){
@@ -159,12 +163,12 @@ module.exports = function(app, mysqlConn) {
 			.then(function(response){
 				placeDetailsResponse = response.json.result;
 				
-				var placesDetails = [[ 'directions', alexaLocation.name, alexaLocation.address, alexaLocation.lat, alexaLocation.lng,
-						placeDetailsResponse.name, placeDetailsResponse.formatted_address, placeDetailsResponse.geometry.location.lat, 
-						placeDetailsResponse.geometry.location.lng 
+				var placesDetails = [[ 'directions', 'El direccionamiento se puede visualizar en el mapa', alexaLocation.name, alexaLocation.address, 
+						alexaLocation.lat, alexaLocation.lng, placeDetailsResponse.name, placeDetailsResponse.formatted_address, 
+						placeDetailsResponse.geometry.location.lat, placeDetailsResponse.geometry.location.lng 
 					]];
 				
-				mysqlConn.query('INSERT INTO google_api_info (MODE, NAME_START, ADDRESS_START, START_LAT, START_LNG, NAME_END, ADDRESS_END, \
+				mysqlConn.query('INSERT INTO google_api_info (MODE, DESCRIPCION, NAME_START, ADDRESS_START, START_LAT, START_LNG, NAME_END, ADDRESS_END, \
 					END_LAT, END_LNG) VALUES ?', [placesDetails], function (err, result) {
 				    	if (err) throw err;
 				    	console.log(result.affectedRows.toString() + " registro(s) insertado(s) por servicio directions");
