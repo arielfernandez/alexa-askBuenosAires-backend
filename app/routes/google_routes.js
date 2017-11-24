@@ -1,7 +1,7 @@
 // google-service-route
 //const opn = require('opn');
 const googleMapsClient = require('@google/maps').createClient({
-	key: 'AIzaSyAuxVsKYV7lgV6PnJiyLEdDpOy2kSjYM4c',
+	key: '*',
 	Promise: Promise
 });
 const alexaLocation = {
